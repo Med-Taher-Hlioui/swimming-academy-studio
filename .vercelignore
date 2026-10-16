@@ -1,0 +1,8 @@
+.git
+.env*
+.browser-test
+.test-build
+.next
+node_modules
+coverage
+*.tsbuildinfo
