@@ -2,6 +2,10 @@
 
 A private owner demonstration for swimming academies in Tunisia. **DEMO MODE is always visible. Every person, group and record is fictional. In-memory storage is not secure or suitable for real personal information. Never enter real children's details.**
 
+Live Vercel demo: https://swimming-academy-studio.vercel.app
+
+Deployed to the owner's `mohamed-tahar-hlioui/swimming-academy-studio` Vercel project. All seven routes passed production HTTP checks. The application itself has no authentication; treat the live URL as publicly accessible. Changes still use temporary browser memory. GitHub publishing and Git-based automatic deployments remain pending repository creation/access.
+
 ## Setup
 
 Use Node.js 24 LTS and npm. The unit suite uses Node's built-in test runner; no cloud account, API key, environment file or database is needed.
@@ -78,4 +82,4 @@ Edit `src/config/academy.ts` for application-wide name, tagline and accent color
 - [Demo walkthrough and rule examples](docs/DEMO.md)
 - [Content Studio and future cloud integration](docs/CONTENT_STUDIO.md)
 
-No deployment is authorized by this task; deployment requires separate confirmation.
+The owner explicitly authorized the initial Vercel deployment. Future deployments should follow the owner's instructions for the relevant change.
