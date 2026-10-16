@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": ".test-build",
+    "rootDir": ".",
+    "noEmit": false,
+    "incremental": false,
+    "isolatedModules": false,
+    "plugins": []
+  },
+  "include": ["src/features/academy/*.ts", "src/features/content-studio/*.ts", "tests/**/*.test.ts"],
+  "exclude": ["node_modules", ".test-build"]
+}

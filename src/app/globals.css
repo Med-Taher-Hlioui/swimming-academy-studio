@@ -1,26 +1,50 @@
 @import "tailwindcss";
+:root { --background: #f4f7fa; --foreground: #122a42; }
+@theme inline { --color-background: var(--background); --color-foreground: var(--foreground); --font-sans: Arial, Helvetica, sans-serif; }
+body { background: var(--background); color: var(--foreground); font-family: Arial, Helvetica, sans-serif; }
+button, a, input, select { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid #0891b2; outline-offset: 4px; }
+.sidebar { position: fixed; inset: 0 auto 0 0; width: 16rem; flex-direction: column; padding: 2rem 1.4rem; background: #0b233b; color: white; overflow-y: auto; }
+.brand-mark { display: flex; flex-shrink: 0; width: 2.7rem; height: 2.7rem; align-items: center; justify-content: center; border-radius: .8rem; background: var(--academy-primary); color: white; font-size: 2rem; }
+.nav-link { display: flex; align-items: center; gap: .75rem; border-radius: .65rem; padding: .75rem; font-size: .85rem; color: #a9bbcd; transition: background .15s; }
+.nav-link:hover { background: #16354e; color: white; }
+.nav-link.active { color: white; background: #174760; box-shadow: inset 3px 0 #39c7d6; }
+.eyebrow { font-size: .63rem; letter-spacing: .18em; font-weight: 700; color: var(--academy-primary); }
+.button { display: inline-flex; justify-content: center; align-items: center; gap: .5rem; border-radius: .6rem; background: var(--academy-primary); color: white; padding: .75rem 1rem; font-size: .8rem; font-weight: 600; }
+.button:hover { filter: brightness(.92); }
+.skip-link { position: fixed; top: -100px; left: 1rem; z-index: 50; background: white; padding: 1rem; }
+.skip-link:focus { top: 1rem; }
+td { padding: 1rem 1.25rem; white-space: nowrap; }
+input, select, textarea { border: 1px solid #cbd5e1; border-radius: .6rem; background: white; padding: .7rem .85rem; font-size: .875rem; }
+textarea { resize: vertical; }
+.field { display: flex; min-width: 0; flex-direction: column; gap: .5rem; font-size: .8rem; font-weight: 500; }
+.field input, .field select, .field textarea { min-width: 0; width: 100%; }
+input[type="checkbox"] { width: 1rem; height: 1rem; margin-top: .15rem; accent-color: var(--academy-primary); }
+.secondary-button { border: 1px solid #cbd5e1; border-radius: .6rem; padding: .7rem 1rem; font-size: .8rem; }
+button:disabled, select:disabled { cursor: wait; opacity: .6; }
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+/* Comfortable touch targets and intrinsic sizing keep forms usable at 320px. */
+* { box-sizing: border-box; }
+html { color-scheme: light; scroll-padding-top: 6rem; }
+body { margin: 0; line-height: 1.5; -webkit-text-size-adjust: 100%; }
+h1, h2, h3, p, dd, a, button { overflow-wrap: anywhere; }
+fieldset { min-inline-size: 0; }
+input, select, textarea { max-width: 100%; min-height: 2.75rem; font-size: 1rem; }
+input[type="checkbox"] { min-height: 1.25rem; min-width: 1.25rem; }
+button, .button, .secondary-button, .nav-link { min-height: 2.75rem; }
+.button, .secondary-button { display: inline-flex; align-items: center; justify-content: center; text-align: center; font-size: .875rem; }
+.button { background: var(--academy-primary); }
+.field { font-size: .875rem; gap: .5rem; }
+.eyebrow { font-size: .7rem; letter-spacing: .13em; }
+.nav-link { font-size: .9375rem; }
+.text-button { display: inline-flex; min-height: 2.75rem; align-items: center; padding: .4rem .2rem; font-size: .875rem; font-weight: 600; color: #0e647b; text-decoration: underline; text-underline-offset: 3px; }
+.guide-panel { border: 1px solid #b4dce5; border-radius: 1rem; background: #edf8fb; padding: 1.25rem; }
+button:disabled, select:disabled { cursor: not-allowed; opacity: .65; }
+input:disabled, textarea:disabled { cursor: not-allowed; background: #f8fafc; }
+[hidden] { display: none !important; }
+td { padding: .85rem 1rem; }
+#main-content:focus { outline: none; }
+progress { border-radius: 1rem; overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+@media (max-width: 639px) { .guide-panel { padding: 1rem; } td { padding: .75rem; } }
