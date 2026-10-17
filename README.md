@@ -4,7 +4,9 @@ A private owner demonstration for swimming academies in Tunisia. **DEMO MODE is 
 
 Live Vercel demo: https://swimming-academy-studio.vercel.app
 
-Deployed to the owner's `mohamed-tahar-hlioui/swimming-academy-studio` Vercel project. All seven routes passed production HTTP checks. The application itself has no authentication; treat the live URL as publicly accessible. Changes still use temporary browser memory. GitHub publishing and Git-based automatic deployments remain pending repository creation/access.
+Source repository: https://github.com/Med-Taher-Hlioui/swimming-academy-studio
+
+Deployed to the owner's `mohamed-tahar-hlioui/swimming-academy-studio` Vercel project. All seven routes passed production HTTP checks. The application itself has no authentication; treat the live URL as publicly accessible. Changes still use temporary browser memory. The initial deployment used the Vercel CLI; Git-based automatic deployments are not configured.
 
 ## Setup
 
