@@ -1,0 +1,92 @@
+name: smoke
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "scripts/**"
+      - "package.json"
+      - "package-lock.json"
+      - "next.config.ts"
+      - ".github/workflows/smoke.yml"
+
+concurrency:
+  group: smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser-smoke:
+    name: browser-smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache .next/cache
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: next-cache-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('src/**', 'next.config.ts', 'tsconfig.json') }}
+          restore-keys: |
+            next-cache-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+            next-cache-${{ runner.os }}-
+
+      - name: Build
+        run: npm run build
+
+      - name: Start production server
+        run: |
+          npm run start -- --port 3100 &
+          echo $! > /tmp/server.pid
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:3100 >/dev/null; then
+              echo "server ready after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "server failed to become ready in 60s" >&2
+          kill "$(cat /tmp/server.pid)" || true
+          exit 1
+
+      - name: Setup Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install Chromium runtime dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libnss3 libatk-bridge2.0-0 libatk1.0-0 libcups2 libdrm2 libgbm1 \
+            libasound2t64 libxcomposite1 libxdamage1 libxfixes3 libxkbcommon0 \
+            libxrandr2 fonts-liberation
+
+      - name: Run browser smoke test
+        env:
+          BROWSER_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: node scripts/browser-smoke.mjs
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-screenshots
+          path: .browser-test/*.png
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Stop server
+        if: always()
+        run: |
+          if [ -f /tmp/server.pid ]; then kill "$(cat /tmp/server.pid)" || true; fi

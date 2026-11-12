@@ -41,3 +41,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local-only notes (never committed to the public fork)
+ROADMAP.local.md
+*.local.md
