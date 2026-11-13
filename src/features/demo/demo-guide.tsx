@@ -8,7 +8,7 @@ import { demoSteps } from "./guide-model";
 export function DemoGuide() {
   const { tour, ready, finished, start, stop, next, previous } = useDemoGuide();
   const router = useRouter();
-  function begin() { start(); router.push("/"); }
+  function begin() { start(); router.push("/dashboard"); }
   if (!tour) return <section className="guide-panel mb-7 flex flex-wrap items-center justify-between gap-4" aria-label="Owner demonstration">
     <div><p className="eyebrow">OWNER WALKTHROUGH · 6 STEPS</p><h2 className="mt-2 font-semibold">From your first dashboard to your next social post.</h2><p className="mt-1 text-sm text-slate-600">A guided tour using fictional data. Start here or explore freely.</p></div>
     <button type="button" className="button" onClick={begin}>Start guided demo</button>

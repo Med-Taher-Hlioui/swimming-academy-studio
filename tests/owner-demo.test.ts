@@ -7,13 +7,13 @@ import { canCompleteStep, demoSteps } from "../src/features/demo/guide-model";
 import type { StepEvidence } from "../src/features/demo/guide-model";
 
 const emptyEvidence: StepEvidence = {
-  pathname: "/", groupOpened: false, attendanceChanged: false,
+  pathname: "/dashboard", groupOpened: false, attendanceChanged: false,
   registrationAdded: false, captionGenerated: false, calendarAdded: false,
 };
 
 test("walkthrough has the requested six steps in order and never skips uncompleted actions", () => {
   assert.equal(demoSteps.length, 6);
-  assert.deepEqual(demoSteps.map(step => step.path), ["/", "/groups", "/attendance", "/registrations", "/shark-ai", "/shark-ai"]);
+  assert.deepEqual(demoSteps.map(step => step.path), ["/dashboard", "/groups", "/attendance", "/registrations", "/shark-ai", "/shark-ai"]);
   assert.equal(canCompleteStep(0, emptyEvidence), true);
   for (let index = 1; index < demoSteps.length; index++) {
     assert.equal(canCompleteStep(index, { ...emptyEvidence, pathname: demoSteps[index].path }), false);
@@ -24,7 +24,7 @@ test("walkthrough has the requested six steps in order and never skips uncomplet
 
 test("each step requires its matching route and action evidence", () => {
   const complete = {
-    pathname: "/", groupOpened: true, attendanceChanged: true,
+    pathname: "/dashboard", groupOpened: true, attendanceChanged: true,
     registrationAdded: true, captionGenerated: true, calendarAdded: true,
   };
   demoSteps.forEach((step, index) => {
@@ -68,4 +68,10 @@ test("fresh demo adapters restore academy records and clear content plans", asyn
   assert.equal((await resetAcademy.getDashboard()).attendanceRate, 75);
   assert.equal((await resetAcademy.getDashboard()).pendingRegistrations, 1);
   assert.deepEqual(await createDemoContentService().listDrafts(), []);
+});
+
+
+test("public homepage cannot complete a workspace tour step", () => {
+  assert.equal(canCompleteStep(0, { ...emptyEvidence, pathname: "/" }), false);
+  assert.equal(demoSteps[0].href, "/dashboard");
 });

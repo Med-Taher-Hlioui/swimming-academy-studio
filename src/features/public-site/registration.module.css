@@ -1,0 +1,94 @@
+.registration {
+  --registration-navy: #082e52;
+  --registration-ocean: #0879c4;
+  --registration-aqua: #21c7de;
+  --registration-ice: #ddf8fc;
+  color: var(--registration-navy);
+}
+
+.container { width: min(calc(100% - 2.5rem), 1060px); margin-inline: auto; }
+.intro {
+  background: radial-gradient(ellipse at 85% 0%, var(--registration-ice), transparent 65%), #fff;
+  border-bottom: 1px solid #d2e5ec;
+  padding-block: clamp(3.25rem, 8vw, 7rem);
+}
+.intro h1 {
+  max-width: 16ch;
+  font-size: clamp(2.4rem, 6vw, 4.8rem);
+  font-weight: 750;
+  line-height: 1.04;
+  letter-spacing: -.055em;
+  text-wrap: balance;
+}
+.registration p { max-width: 66ch; color: #486578; line-height: 1.7; }
+.intro p { margin-top: 1.25rem; font-size: clamp(1rem, 2vw, 1.2rem); }
+.action {
+  display: inline-flex;
+  min-height: 50px;
+  align-items: center;
+  justify-content: center;
+  gap: .65rem;
+  margin-top: 1.5rem;
+  border-radius: 999px;
+  padding: .75rem 1.25rem;
+  background: var(--registration-navy);
+  color: #fff;
+  text-align: center;
+  font-weight: 700;
+}
+.action:hover { background: #12456b; }
+.registration :is(a, input, summary):focus-visible { outline: 3px solid var(--registration-ocean); outline-offset: 3px; }
+.section { padding-block: clamp(2rem, 5vw, 4rem); border-bottom: 1px solid #d2e5ec; }
+.section h2 { font-size: clamp(1.65rem, 3vw, 2.5rem); font-weight: 750; line-height: 1.15; letter-spacing: -.04em; }
+.section h3 { font-size: 1.05rem; font-weight: 700; }
+.section h2 + p, .section h3 + p { margin-top: .65rem; }
+.steps, .practical { display: grid; gap: .85rem; margin-block: 1.25rem; }
+.steps { grid-template-columns: repeat(4, minmax(0, 1fr)); counter-reset: registration-step; }
+.practical { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.steps li, .practical > div { background: #fff; border: 1px solid #d2e5ec; padding: 1.15rem; border-radius: 18px; }
+.steps li::before {
+  counter-increment: registration-step;
+  content: counter(registration-step);
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  margin-bottom: .75rem;
+  background: var(--registration-ice);
+  font-weight: 700;
+}
+.checklist, .contact { margin-block: 1.75rem; padding-inline: clamp(1rem, 4vw, 2.75rem); border: 0; border-radius: 24px; background: var(--registration-ice); }
+.checklist fieldset { min-inline-size: 0; max-width: 720px; margin-top: 1rem; display: grid; gap: .5rem; }
+.checklist label {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  min-height: 48px;
+  padding: .65rem .85rem;
+  border: 1px solid #badbe8;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+.checklist label:has(input:checked) { border-color: var(--registration-ocean); box-shadow: inset 3px 0 var(--registration-aqua); }
+.checklist input { width: 1.2rem; height: 1.2rem; flex-shrink: 0; accent-color: var(--registration-navy); }
+.accordion { max-width: 820px; margin-top: 1rem; display: grid; gap: .5rem; }
+.accordion details { border: 1px solid #d2e5ec; border-radius: 12px; background: #fff; }
+.accordion summary { min-height: 48px; padding: .8rem 1rem; font-weight: 700; cursor: pointer; }
+.accordion summary::marker { color: var(--registration-ocean); }
+.accordion details[open] { border-color: #9dc6da; }
+.accordion details > p { padding: 0 1rem 1rem; }
+.contact { background: var(--registration-navy); color: #fff; }
+.contact p { color: #e0f1fa; }
+.contact .action { background: var(--registration-ice); color: var(--registration-navy); }
+.contact .action:hover { background: #fff; }
+.contact .action:focus-visible { outline-color: var(--registration-aqua); }
+
+@media (max-width: 880px) {
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .steps, .practical { grid-template-columns: 1fr; }
+  .intro .action, .contact .action { width: 100%; }
+}

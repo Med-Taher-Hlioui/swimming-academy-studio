@@ -9,7 +9,7 @@ import { DemoBanner } from "@/features/demo/demo-banner";
 import { DemoGuide } from "@/features/demo/demo-guide";
 
 const navigation = [
-  ["/", "Overview", "◫"], ["/swimmers", "Swimmers", "○"], ["/groups", "Groups", "▦"],
+  ["/dashboard", "Overview", "◫"], ["/swimmers", "Swimmers", "○"], ["/groups", "Groups", "▦"],
   ["/attendance", "Attendance", "✓"], ["/registrations", "Registrations", "▤"], ["/shark-ai", "SHARK AI", "✧"], ["/settings", "Settings", "⚙"],
 ];
 function MobileNavigation() {
@@ -31,7 +31,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return <div className="min-h-screen">
     <a href="#main-content" className="skip-link">Skip to content</a>
     <aside className="sidebar hidden lg:flex">
-      <Link href="/" className="flex items-center gap-3"><span aria-hidden="true" className="brand-mark">≈</span><span className="text-sm font-semibold leading-5">{academyConfig.name}</span></Link>
+      <Link href="/dashboard" className="flex items-center gap-3"><span aria-hidden="true" className="brand-mark">≈</span><span className="text-sm font-semibold leading-5">{academyConfig.name}</span></Link>
       <p className="mt-10 mb-4 text-xs font-semibold tracking-widest text-slate-400">MANAGE YOUR ACADEMY</p>
       <nav aria-label="Main navigation" className="space-y-2">{navigation.map(([href, label, icon]) => <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined} className={`nav-link ${pathname === href ? "active" : ""}`}><span aria-hidden="true" className="w-6 text-lg">{icon}</span>{label}{label === "SHARK AI" && <span className="ml-auto text-xs text-cyan-300">V0</span>}</Link>)}</nav>
       <div className="mt-auto rounded-xl border border-white/10 bg-white/5 p-4"><span className="text-sm font-medium text-cyan-300">Owner demonstration</span><p className="mt-2 text-xs leading-5 text-slate-300">Fictional academy records. SHARK AI uses templates, not real AI. No live services connected.</p></div>
@@ -43,6 +43,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <span className="hidden rounded-full border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-900 lg:block">DEMO MODE</span>
       </header>
       <DemoBanner />
+      <div className="mx-auto max-w-7xl px-4 pt-3 text-right text-sm sm:px-8"><Link className="font-semibold text-cyan-800 hover:underline" href="/admin" prefetch={false}>Admin sign-in ↗</Link><Link className="ml-4 font-semibold text-cyan-800 hover:underline" href="/parent/login" prefetch={false}>Parent sign-in ↗</Link></div>
       <main id="main-content" tabIndex={-1} className="mx-auto min-w-0 max-w-7xl px-4 py-6 sm:px-8 sm:py-8">
         <DemoGuide />
         <DemoFeedback />

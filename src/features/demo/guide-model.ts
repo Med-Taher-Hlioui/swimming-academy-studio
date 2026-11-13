@@ -1,5 +1,5 @@
 export const demoSteps = [
-  { title: "View dashboard", href: "/", path: "/", instruction: "Review the six live demo statistics and group occupancy. They all come from the shared fictional data." },
+  { title: "View dashboard", href: "/dashboard", path: "/dashboard", instruction: "Review the six live demo statistics and group occupancy. They all come from the shared fictional data." },
   { title: "Open a training group", href: "/groups", path: "/groups", instruction: "Select Open / edit group on Little Waves. Review the demo coach, two allocated swimmers and capacity of eight. You can save an edit or cancel." },
   { title: "Record attendance", href: "/attendance", path: "/attendance", instruction: "Select the 12 October Little Waves session. Change Demo Swimmer 02 from Absent to Present. Attendance updates immediately." },
   { title: "Simulate a registration", href: "/registrations", path: "/registrations", instruction: "Choose an unused demo applicant number, a swimming level and the fictional-data confirmation. Submit the enquiry. No real enrollment occurs." },

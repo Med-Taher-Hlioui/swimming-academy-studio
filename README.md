@@ -1,87 +1,132 @@
-# Swimming Academy Studio V0
+# Shark Aquatics Academy OS
 
-A private owner demonstration for swimming academies in Tunisia. **DEMO MODE is always visible. Every person, group and record is fictional. In-memory storage is not secure or suitable for real personal information. Never enter real children's details.**
+A Next.js application containing the public Shark Aquatics website, a fictional owner demo, and separate authenticated Admin and Parent workspaces. The current development branch is `preview/academy-dev` in `Med-Taher-Hlioui/swimming-academy-studio`.
 
-Live Vercel demo: https://swimming-academy-studio.vercel.app
+## Routes and data boundaries
 
-Source repository: https://github.com/Med-Taher-Hlioui/swimming-academy-studio
+| Area | Routes | Behavior |
+| --- | --- | --- |
+| Public website | `/`, `/inscription` | Academy information, swimming programs, team, directions, registration instructions and WhatsApp trial requests. Requests open WhatsApp for the visitor to send. |
+| Fictional demo | `/dashboard`, `/swimmers`, `/groups`, `/attendance`, `/registrations`, `/shark-ai`, `/settings` | Search, group capacity, attendance, simulated enquiries, guided tour and template-based Content Studio. DEMO MODE remains visible. |
+| Admin | `/admin/login`, `/admin/dashboard`, `/admin/swimmers`, `/admin/subscriptions`, `/admin/groups`, `/admin/attendance`, `/admin/registrations`, `/admin/invitations` | Verified sign-in and active Admin membership for the server-configured academy. Includes guardian contacts, document receipt statuses, monthly subscription observations, review tools and verified Parent invitations. |
+| Parent | `/parent/login`, `/parent/invite`, `/parent`, `/parent/children/[id]` | Verified sign-in, active Parent membership and an Admin-verified guardian link. Shows authorized children, attendance and published notes, subscription and document information. |
+| Parent Auth callback | `/parent/auth/callback` | Scoped PKCE code exchange with fixed internal destinations. Successful external email/SSO delivery remains to be exercised. |
 
-Deployed to the owner's `mohamed-tahar-hlioui/swimming-academy-studio` Vercel project. All seven routes passed production HTTP checks. The application itself has no authentication; treat the live URL as publicly accessible. Changes still use temporary browser memory. The initial deployment used the Vercel CLI; Git-based automatic deployments are not configured.
+Admin and Parent use Supabase Auth, server-side role checks, tenant isolation, controlled database operations and separate HttpOnly session cookies. Protected responses use private/no-store caching. Parent data is limited by verified relationships, publication rules and approved history dates. Guardian contact records alone grant no access.
 
-## Setup
+The fictional demo uses in-memory records independent of the authenticated workspaces. Reloading starts a fresh demo. **Never enter real children's details into the demo. Its storage is unsuitable for real personal information.** SHARK AI is a deterministic Demo Generator. Captions and calendar entries remain drafts until the owner acts outside the application.
 
-Use Node.js 24 LTS and npm. The unit suite uses Node's built-in test runner; no cloud account, API key, environment file or database is needed.
+## Local setup
+
+Use Node.js 24 LTS and npm. From this repository run the following commands.
 
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
-Open http://localhost:3000. For a presentation, use the production build below to avoid development tooling:
+Open `http://localhost:3000` for the website or `/dashboard` for the fictional demo. These areas work without database configuration. Admin and Parent access requires separate local opt-in configuration and pre-provisioned verified synthetic identities.
+
+To run the production build locally, use the default Turbopack build.
 
 ```sh
 npm run build
-npm run start
+npm run start -- --hostname 127.0.0.1 --port 3100
 ```
 
-This serves the app locally; it does not deploy it. Another port can be selected with `npm run start -- --port 3100`.
+### Local authenticated workspaces
 
-## Guided owner demonstration
+Use a disposable local Supabase PostgreSQL 17 stack with the seven versioned migrations under `supabase/migrations`. No real workbook or personal records are needed. The designated hosted development project is `academy-os-dev` (`dzepxtynubzhwmcezvvp`). Local commands must target the local stack.
 
-Select **Start guided demo** above the dashboard. The guide stays with you across navigation and enables Continue only after the relevant action. You can exit at any time without losing saved demo changes.
+```sh
+supabase --version
+supabase start
+supabase db reset --no-seed
+supabase test db
+```
 
-1. **View dashboard:** review six statistics and group occupancy, then Continue.
-2. **Open a training group:** select **Open / edit group** on Little Waves. Review Demo Coach A, the two fictional swimmers and capacity of eight. Save an optional change or Cancel, then Continue.
-3. **Record attendance:** choose the 12 October Little Waves session. Set Demo Swimmer 02 from Absent to Present. The overall attendance rate becomes 100%. Continue.
-4. **Simulate a registration:** enter unused demo applicant number 3, choose a level and confirm fictional data only. Submit the enquiry, then Continue. This creates an enquiry, not an enrolled swimmer.
-5. **Generate a caption:** select a platform, objective and language. Choose **Use fictional example**, generate three examples, and **Save as draft** on one. Continue. SHARK AI is labeled **Demo Generator**, using deterministic templates rather than real AI.
-6. **Plan the content:** review the draft, optionally edit and Save edits, then **Approve draft**. Choose 14 October 2026 (or another date) and **Add to calendar**. The visible week follows the date. Finish the walkthrough.
+The migration workflow was prepared with Supabase CLI 3.1.0. Verify command help when using another version. Reset applies only to the disposable local database.
 
-No content is automatically published. Caption copying uses the clipboard only when requested, with manual-copy text if browser access is unavailable.
+Configure local values in an ignored environment file. The following table lists names only.
 
-## Reset between demonstrations
+| Variable | Local purpose |
+| --- | --- |
+| `SHARK_LOCAL_ADMIN` | Set to `1` to opt in to Admin access. |
+| `SHARK_LOCAL_PARENT` | Set to `1` to opt in to Parent access. |
+| `SHARK_LOCAL_SUPABASE_URL` | Loopback API URL, `http://127.0.0.1:<local-port>`. |
+| `SHARK_LOCAL_SUPABASE_PUBLISHABLE_KEY` | Publishable key from the disposable local stack. |
+| `SHARK_LOCAL_ACADEMY_ID` | Synthetic academy UUID required for Admin access. |
 
-Choose **Reset demo data** in the Demo Mode banner, then **Reset everything**. The confirmation explains what will be cleared; **Keep my changes** cancels.
+Run the application bound to `127.0.0.1`. Provision verified synthetic accounts and authorized memberships through the reviewed local fixtures or operator workflow. The application has no public account-creation flow. Fixture/operator credentials belong only to their provisioning process. Keep them outside the application environment and Git.
 
-Reset restores seeded academy records and removes content drafts, calendar plans, form state and walkthrough progress in this tab. Reloading or opening a new tab also starts fresh. Client navigation keeps saved changes; unsaved editor fields can be lost when leaving a page. Restart walkthrough only restarts guide progress and captures a new baseline; it does not erase records.
+## Guided owner demo
+
+Open `/dashboard` and choose **Start guided demo**.
+
+1. Review dashboard statistics derived from fictional records.
+2. Open and edit a training group, checking coach assignment and capacity.
+3. Record attendance for a selected session.
+4. Submit a fictional registration enquiry.
+5. Generate a caption and save a draft in SHARK AI.
+6. Approve the draft and add it to the weekly calendar.
+
+Choose **Reset demo data**, then **Reset everything** to restore academy fixtures, clear content drafts and reset the guide. **Keep my changes** cancels. Client navigation preserves demo changes within the tab. Caption copying uses the clipboard when permitted and provides manual-copy feedback otherwise.
 
 ## Testing
 
 ```sh
 npm test
+python -B -m unittest discover -s scripts/import
 npm run lint
 npm run typecheck
 npm run build
+node scripts/preview-security-check.mjs
 ```
 
-Unit tests cover academy capacity/attendance rules, all 36 content option combinations, draft approval/calendar rules, reset isolation, guided-step gating and a complete service-level owner scenario.
+Application tests cover academy rules, server authorization boundaries, Parent visibility helpers, Preview configuration, public requests, Content Studio and the guided tour. Importer tests use synthetic inputs. Database security tests run separately with `supabase test db` against the disposable local stack.
 
-Optional browser smoke test (Windows with Chrome or Edge installed): start the production server on port 3100, then run `node scripts/browser-smoke.mjs`. It uses a separate headless browser profile, checks the six-step flow and all pages at 320px/390px, and writes screenshots under ignored `.browser-test/`. No browser package download is required.
+For the public/demo browser regression suite, keep the production server running on `127.0.0.1:3100`, then run `node scripts/browser-smoke.mjs`. It uses installed Chrome or Edge on Windows and writes artifacts to ignored `.browser-test/`. `SMOKE_ORIGIN` can select a different local server. Authenticated Admin/Parent browser harnesses remain local review tools and require approved synthetic fixtures.
 
-Before presenting, manually check:
+### Turbopack build recovery
 
-- At 320px/390px and desktop widths: navigation, forms and calendar; only tables should scroll horizontally.
-- Open/close the mobile Menu, use Escape, and navigate to a page.
-- Use Tab/Shift+Tab, the skip link, form labels and the scrollable table regions.
-- Walk through all six steps, then reset and confirm attendance returns to 75% and content drafts are empty.
-- Try capacity 1 with two selected swimmers, a duplicate applicant number and an empty content brief; expect validation without data loss.
-- Approve/schedule a draft, edit its copy, save, and confirm the calendar entry is removed until approved again.
-- Open an unknown route for the recovery screen. Clipboard behavior depends on browser permissions.
+The Phase 3.6 review reproduced a CSS-loader worker startup failure against existing generated `.next` output. Preserving that output under ignored `.local-dev/` and building from a fresh `.next` directory restored the default Turbopack build. This recovery requires no application dependency or build-command change.
 
-## Working modules and limitations
+If the same worker failure recurs, stop this repository's dev/start processes, verify that `.next` resolves inside this repository, and move it to a new ignored `.local-dev/` backup directory. Then rerun `npm run build` and repeat the build with its fresh cache. Preserve source and environment files. Record a new failure if a clean build also fails. A Webpack fallback alone does not verify the default build path.
 
-Working: dashboard, swimmer search/level filters, group creation/editing, seeded coach assignment, swimmer allocation/capacity, session creation/attendance, fictional enquiries/review, multilingual template generation, draft editing/approval, manual weekly planning and guided demonstration.
+## Separate protected Vercel Preview
 
-Simulated or unavailable: real authentication/authorization, durable storage, multi-user sharing, real enrollment, payments, notifications, cloud AI, media uploads and social publishing. There are no connected external services. Settings is a live branding playground; it does not save application settings.
+The proposed target is a new `swimming-academy-studio-preview` project in the owner's Vercel team, connected only to approved source on `preview/academy-dev` and the dedicated Supabase development project. It awaits owner approval and creation. No working Preview URL has been established.
 
-Route loading and recovery screens support navigation/errors. Service actions disable duplicate submissions and provide status/error feedback. Memory operations normally complete immediately, so loading indicators may be brief.
+The existing production project is `swimming-academy-studio`, and the local `.vercel` link points to it. Every future Preview operation must explicitly select the new project ID and team. Configure Vercel Authentication and reviewer access before enabling Git deployments. Verify that the new ID differs from production, retain the existing production domain, and add a project-level build gate allowing only the exact branch in the standard Preview environment. `vercel.json` provides a branch allowlist but cannot establish the project's protection or environment settings.
 
-## Branding and architecture
+Set only these development values in the new project's branch-scoped Preview environment.
 
-Edit `src/config/academy.ts` for application-wide name, tagline and accent color.
+- `SHARK_PREVIEW_ENABLED`
+- `SHARK_PREVIEW_SUPABASE_URL`
+- `SHARK_PREVIEW_SUPABASE_PUBLISHABLE_KEY`
+- `SHARK_PREVIEW_ACADEMY_ID`
 
-- [Architecture](docs/ARCHITECTURE.md)
-- [Demo walkthrough and rule examples](docs/DEMO.md)
-- [Content Studio and future cloud integration](docs/CONTENT_STUDIO.md)
+The app also checks the platform-provided `VERCEL`, `VERCEL_ENV`, `VERCEL_TARGET_ENV` and `VERCEL_GIT_COMMIT_REF`. Hosted workspaces activate only for the exact Preview branch, development URL and valid configuration. Preview cookies are Secure and role-scoped. Application deployment uses a publishable key and verified user sessions. Privileged keys and database passwords belong outside the application configuration.
 
-The owner explicitly authorized the initial Vercel deployment. Future deployments should follow the owner's instructions for the relevant change.
+The GitHub workflow validates source without deploying. The rollout requires separate approval of the exact publication inventory, protected project creation, database migrations, development configuration and synthetic accounts, commit/push, and first deployment. Native Git deployment activation must follow those approvals. Cloud authentication, tenant isolation and both access layers require acceptance tests before sharing the protected URL.
+
+## Current limitations
+
+- Admin group management requires an existing eligible primary coach. Coach-assignment editing and a Coach workspace remain future work.
+- Parent activity has bounded result limits. Historical pagination, real account provisioning and successful external email/SSO delivery remain pending.
+- Monthly payment statuses are recorded observations. The app has no payment processing, transaction ledger, collection totals or inferred balances.
+- Document handling records receipt statuses. It provides no file uploads.
+- Import tools support local dry-run/review workflows. Real workbook apply remains a separate approved operation.
+- The public trial helper collects audience and estimated swimming level and opens an encoded WhatsApp request. Booking confirmation and online scheduling are outside this workflow.
+- External AI, automatic social publishing and notifications remain pending. Settings in the fictional demo is a branding playground.
+
+## Content, branding and publication
+
+Public content is configured in `src/config/public-site.ts`, media references in `src/config/public-media-manifest.json`, and demo branding in `src/config/academy.ts`. Public layout/components remain separate from Admin, Parent and demo providers. Public preview metadata remains noindex, and workspace pages remain noindex/nofollow.
+
+The development Preview uses labeled aquatic placeholders and pending portraits. The original logo, photos, decorative artwork and videos are preserved in ignored local storage and excluded from Git and deployment uploads. Video playback controls are omitted. Restore original media only after its intended publication rights are confirmed, preserving the official logo's proportions. Website-use permission does not establish public GitHub redistribution permission.
+
+Keep private workbooks, environment files, original media, local fixture state and review artifacts excluded from Git and deployments. `.env.example` contains placeholders only. The public source commit must use the reviewed per-file inventory.
+
+
+The operator-only synthetic demonstration seed is `scripts/preview/seed.sql`. It requires three distinct verified synthetic `example.test` identities passed as psql variables `admin_uid`, `parent_uid` and `other_parent_uid`. It creates eight swimmers, three coached groups, eight subscriptions, June–November 2026 status observations, sessions and verified guardian links in a transaction. All people, birth dates, amounts and records are fictional. Run only against an approved development target after the seven migrations. The seed refuses to overwrite an existing Preview academy. Auth accounts must be provisioned separately after approval.

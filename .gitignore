@@ -34,6 +34,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -41,3 +42,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Private local media review files
+/.local-dev/
+/docs/media-audit/
+/docs/V0.5-REGISTRATION-DOCUMENT-REVIEW.md
+/docs/V0.5.1-PROMOTIONAL-IMAGE-CONSENT-DRAFT.md
+
+/shark database.xlsx
+
+# Uncleared original media remains local during the development Preview
+/public/brand/
+/public/media/

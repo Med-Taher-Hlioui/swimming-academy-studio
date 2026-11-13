@@ -6,3 +6,26 @@
 node_modules
 coverage
 *.tsbuildinfo
+
+# Private local media review files
+.local-dev
+docs/media-audit
+docs/V0.5-REGISTRATION-DOCUMENT-REVIEW.md
+docs/V0.5.1-PROMOTIONAL-IMAGE-CONSENT-DRAFT.md
+
+# Private workbooks and local tooling state must never enter preview uploads
+*.xlsx
+*.xlsm
+*.xls
+*.xlsb
+**/*.xlsx
+**/*.xlsm
+**/*.xls
+**/*.xlsb
+.vercel
+supabase/.temp
+supabase/.branches
+
+# Uncleared original media remains local during the development Preview
+public/brand
+public/media

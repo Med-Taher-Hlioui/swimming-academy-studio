@@ -1,0 +1,163 @@
+{
+  "photos": {
+    "hero": {
+      "id": "hero-swimming-lesson",
+      "sourceReviewId": "PREVIEW-hero",
+      "section": "hero",
+      "alt": "Visuel provisoire sans photographie de personne.",
+      "focalPoint": "50% 50%",
+      "approval": {
+        "status": "placeholder",
+        "declaredBy": "development_preview",
+        "date": "2026-11-13"
+      },
+      "url": "",
+      "width": 960,
+      "height": 1280,
+      "bytes": 0,
+      "variants": [],
+      "fallbackUrl": "",
+      "placeholder": true
+    },
+    "technique": {
+      "id": "program-swimming-technique",
+      "sourceReviewId": "PREVIEW-technique",
+      "section": "programs",
+      "alt": "Visuel provisoire sans photographie de personne.",
+      "focalPoint": "50% 50%",
+      "approval": {
+        "status": "placeholder",
+        "declaredBy": "development_preview",
+        "date": "2026-11-13"
+      },
+      "url": "",
+      "width": 960,
+      "height": 1280,
+      "bytes": 0,
+      "variants": [],
+      "fallbackUrl": "",
+      "placeholder": true
+    },
+    "group": {
+      "id": "program-group-coaching",
+      "sourceReviewId": "PREVIEW-group",
+      "section": "programs",
+      "alt": "Visuel provisoire sans photographie de personne.",
+      "focalPoint": "50% 50%",
+      "approval": {
+        "status": "placeholder",
+        "declaredBy": "development_preview",
+        "date": "2026-11-13"
+      },
+      "url": "",
+      "width": 960,
+      "height": 1280,
+      "bytes": 0,
+      "variants": [],
+      "fallbackUrl": "",
+      "placeholder": true
+    },
+    "story": {
+      "id": "academy-personal-coaching",
+      "sourceReviewId": "PREVIEW-story",
+      "section": "story",
+      "alt": "Visuel provisoire sans photographie de personne.",
+      "focalPoint": "50% 50%",
+      "approval": {
+        "status": "placeholder",
+        "declaredBy": "development_preview",
+        "date": "2026-11-13"
+      },
+      "url": "",
+      "width": 960,
+      "height": 1280,
+      "bytes": 0,
+      "variants": [],
+      "fallbackUrl": "",
+      "placeholder": true
+    },
+    "trial": {
+      "id": "trial-swimming-session",
+      "sourceReviewId": "PREVIEW-trial",
+      "section": "trial",
+      "alt": "Visuel provisoire sans photographie de personne.",
+      "focalPoint": "50% 50%",
+      "approval": {
+        "status": "placeholder",
+        "declaredBy": "development_preview",
+        "date": "2026-11-13"
+      },
+      "url": "",
+      "width": 960,
+      "height": 1280,
+      "bytes": 0,
+      "variants": [],
+      "fallbackUrl": "",
+      "placeholder": true
+    },
+    "location": {
+      "id": "location-indoor-pool",
+      "sourceReviewId": "PREVIEW-location",
+      "section": "contact",
+      "alt": "Visuel provisoire sans photographie de personne.",
+      "focalPoint": "50% 50%",
+      "approval": {
+        "status": "placeholder",
+        "declaredBy": "development_preview",
+        "date": "2026-11-13"
+      },
+      "url": "",
+      "width": 960,
+      "height": 1280,
+      "bytes": 0,
+      "variants": [],
+      "fallbackUrl": "",
+      "placeholder": true
+    }
+  },
+  "videos": {
+    "hero": {
+      "id": "hero-motion-preview",
+      "sourceReviewId": "V015",
+      "section": "hero",
+      "url": "",
+      "poster": "",
+      "posterBytes": 0,
+      "width": 464,
+      "height": 832,
+      "duration": 7,
+      "bytes": 0,
+      "approval": {
+        "status": "placeholder",
+        "declaredBy": "development_preview",
+        "date": "2026-11-13"
+      },
+      "fallbackUrl": "",
+      "playLabel": "Voir un moment de natation",
+      "description": "Vidéo omise dans cet aperçu de développement.",
+      "available": false
+    },
+    "story": {
+      "id": "academy-story-preview",
+      "sourceReviewId": "V012",
+      "section": "story",
+      "url": "",
+      "poster": "",
+      "posterBytes": 0,
+      "width": 464,
+      "height": 832,
+      "duration": 8,
+      "bytes": 0,
+      "approval": {
+        "status": "placeholder",
+        "declaredBy": "development_preview",
+        "date": "2026-11-13"
+      },
+      "fallbackUrl": "",
+      "playLabel": "Voir un moment d’accompagnement",
+      "description": "Vidéo omise dans cet aperçu de développement.",
+      "available": false
+    }
+  },
+  "mode": "placeholder"
+}

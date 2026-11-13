@@ -1,0 +1,98 @@
+.motionEnabled {
+  --reveal-distance: 20px;
+  --reveal-duration: 540ms;
+  --reveal-step: 70ms;
+  --reveal-ease: cubic-bezier(.22, 1, .36, 1);
+  --shark-delay: 760ms;
+}
+
+.motionEnabled [data-revealed="true"][data-reveal],
+.motionEnabled [data-revealed="true"] > [data-reveal],
+.motionEnabled [data-revealed="true"] > [data-reveal-headline] > span {
+  animation: enter var(--reveal-duration) var(--reveal-ease) calc(var(--reveal-order, 0) * var(--reveal-step)) backwards;
+}
+
+.motionEnabled [data-revealed="true"] > [data-reveal-headline] > span:nth-child(2),
+.motionEnabled [data-revealed="true"] > [data-reveal-order="2"] { --reveal-order: 2; }
+.motionEnabled [data-revealed="true"] > [data-reveal-headline] > span:nth-child(3),
+.motionEnabled [data-revealed="true"] > [data-reveal-order="3"] { --reveal-order: 3; }
+.motionEnabled [data-revealed="true"] > [data-reveal-headline] > span:first-child,
+.motionEnabled [data-revealed="true"] > [data-reveal-order="1"] { --reveal-order: 1; }
+.motionEnabled [data-revealed="true"] > [data-reveal-order="4"] { --reveal-order: 4; }
+
+.motionEnabled [data-reveal="left"] { --reveal-x: calc(-1 * var(--reveal-distance)); --reveal-y: 0px; }
+.motionEnabled [data-reveal="right"] { --reveal-x: var(--reveal-distance); --reveal-y: 0px; }
+.motionEnabled [data-reveal="fade"] { --reveal-y: 0px; }
+.motionEnabled [data-revealed="true"] > [data-reveal="shark"] {
+  animation:
+    enter var(--reveal-duration) var(--reveal-ease) var(--shark-delay) backwards,
+    shark-swim 5.5s ease-in-out calc(var(--shark-delay) + var(--reveal-duration)) infinite paused;
+  --reveal-x: 0px;
+  --reveal-y: -5px;
+  --shark-travel: -18px;
+  --shark-rise: -7px;
+}
+
+.motionEnabled [data-motion-visible] > [data-reveal="shark"] { animation-play-state: running, running; }
+.motionEnabled [data-motion-visible]:has(video:not([hidden])) > [data-reveal="shark"] { animation-play-state: running, paused; }
+
+@keyframes shark-swim {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  45% { translate: var(--shark-travel) var(--shark-rise); rotate: -5deg; }
+  72% { translate: -5px 1px; rotate: 2deg; }
+}
+
+.motionEnabled [data-revealed="true"] > [data-reveal="cta"] { animation-name: cta-in; }
+
+.motionDisabled *, .motionDisabled *::before, .motionDisabled *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+@keyframes cta-in {
+  from { opacity: .94; }
+  to { opacity: 1; }
+}
+
+@keyframes enter {
+  from { opacity: .8; transform: translate(var(--reveal-x, 0px), var(--reveal-y, var(--reveal-distance))); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 767px) {
+  .motionEnabled { --reveal-distance: 10px; --reveal-duration: 380ms; --reveal-step: 40ms; --shark-delay: 510ms; }
+  .motionEnabled [data-reveal="left"],
+  .motionEnabled [data-reveal="right"] { --reveal-x: 0px; --reveal-y: var(--reveal-distance); }
+  .motionEnabled [data-revealed="true"] > [data-reveal="shark"] { --shark-travel: -9px; --shark-rise: -4px; }
+}
+
+@supports (animation-timeline: view()) {
+  .motionEnabled [data-media-photo] { view-timeline-name: --academy-photo; }
+
+  .motionEnabled [data-media-photo] img {
+    animation: photo-current linear both;
+    animation-timeline: --academy-photo;
+    animation-range: cover 0% cover 100%;
+  }
+}
+
+@keyframes photo-current {
+  from { translate: 0 2%; scale: 1.055; }
+  to { translate: 0 -2%; scale: 1.055; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .motionEnabled [data-motion-card] { transition: transform 260ms var(--reveal-ease), border-color 180ms; }
+  .motionEnabled [data-motion-card]:hover { transform: translateY(-5px); }
+  .motionEnabled [data-media-photo] img { transition: transform 480ms var(--reveal-ease); }
+  .motionEnabled [data-media-photo]:hover img { transform: scale(1.035); }
+}
+
+.motionEnabled [data-program-explorer] button {
+  transition: background-color 180ms, color 180ms, box-shadow 180ms, transform 220ms var(--reveal-ease);
+}
+
+.motionEnabled [data-program-explorer] button:active,
+.motionEnabled [data-location-map] button:active { transform: scale(.97); }
+.motionEnabled [data-location-map] button { transition: transform 220ms var(--reveal-ease), background-color 180ms, color 180ms; }
