@@ -25,3 +25,10 @@ export interface DashboardCounts { swimmers: number; groups: number; confirmedSu
 export interface VerifiedChild { id: string; display_name: string; level: Level; relationship: "parent" | "legal_guardian" }
 export interface ParentChildDetails { subscriptions: PublishedSubscription[]; monthlyStatuses: PublishedMonth[]; documents: PublishedDocument[] }
 
+
+export interface CoachRow extends Versioned { display_name: string; membership_id: string | null; archived_at: string | null }
+export interface Assignment extends Versioned { group_id: string; valid_from: string; valid_until: string | null; cancelled_at: string | null }
+export interface CoachAssignment extends Assignment { coach_id: string; is_primary: boolean }
+export interface SwimmerAssignment extends Assignment { swimmer_id: string }
+export interface AttendanceRevision { id: string; session_id: string; swimmer_id: string; revision: number; previous_status: string | null; new_status: string | null; reason: string | null; created_at: string }
+export interface SwimmerNote extends Versioned { swimmer_id: string; session_id: string | null; body: string; visibility: "internal" | "parent_visible"; deleted_at: string | null }

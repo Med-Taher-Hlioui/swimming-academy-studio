@@ -129,3 +129,47 @@ test("document and approval inputs reject unsupported or forged values", () => {
   assert.throws(() => admin.approveImportReview({batchId:CHILD,version:1,previewDigest:"fake"}), AcademyError);
 });
 
+
+
+test("coach writes validate versions and date ranges, pin academy, and retain group-based assignments", async () => {
+  const {port,calls}=fake(); const repo=adminRepository(port,A);
+  await repo.saveCoach({name:" Synthetic Coach ",archived:false});
+  assert.deepEqual(calls.at(-1)?.filters,{p_academy:A,p_name:"Synthetic Coach",p_id:null,p_expected:null,p_archive:false});
+  assert.throws(()=>repo.saveCoach({id:CHILD,name:"Missing version"}),{code:"invalid_input"});
+  await repo.assignCoach({coachId:CHILD,groupId:B,from:"2026-06-01",until:"2026-07-01",primary:true,p_academy:B});
+  assert.deepEqual(calls.at(-1)?.filters,{p_academy:A,p_coach:CHILD,p_group:B,p_from:"2026-06-01",p_until:"2026-07-01",p_primary:true});
+  assert.throws(()=>repo.assignCoach({coachId:CHILD,groupId:B,from:"2026-07-01",until:"2026-06-01"}),{code:"invalid_input"});
+  await repo.endAssignment({id:CHILD,kind:"coach",until:"2026-07-01",version:2});
+  assert.equal(calls.at(-1)?.name,"academy_end_assignment");
+  assert.equal(calls.at(-1)?.filters.p_expected,2);
+  assert.throws(()=>repo.endAssignment({id:CHILD,kind:"direct_swimmer_coach",until:"2026-07-01",version:2}),{code:"invalid_input"});
+});
+
+test("new management operations refuse Parent and foreign academy authorization", async () => {
+  for(const [id,options] of [[A,{role:"parent"}],[B,{}]] as const){
+    const {port,calls}=fake(options),repo=adminRepository(port,id);
+    await assert.rejects(repo.saveCoach({name:"Synthetic"}),{code:"forbidden"});
+    await assert.rejects(repo.assignCoach({groupId:B,coachId:CHILD,from:"2026-06-01"}),{code:"forbidden"});
+    await assert.rejects(repo.listCoachAssignments(),{code:"forbidden"});
+    await assert.rejects(repo.attendanceHistory(CHILD),{code:"forbidden"});
+    assert.ok(calls.every(c=>["academy_memberships","academies"].includes(c.name)));
+  }
+});
+
+test("history, notes and assignment reads are tenant-scoped with minimal columns", async () => {
+ const {port,calls}=fake(),repo=adminRepository(port,A);
+ await repo.listCoachAssignments(); await repo.listSwimmerAssignments();await repo.attendanceHistory(CHILD);await repo.sessionHistory(CHILD);await repo.listNotes(CHILD);
+ const reads=calls.filter(c=>!["academy_memberships","academies"].includes(c.name));
+ assert.equal(reads.length,5);assert.ok(reads.every(c=>c.filters.academy_id===A));
+ assert.ok(reads.filter(c=>c.name==='attendance_history').every(c=>!c.columns?.includes('request_fingerprint')));
+ assert.equal(reads.at(-1)?.filters.deleted_at,null);
+});
+
+test("notes default to internal operation and publication requires an explicit versioned call",async()=>{
+ const {port,calls}=fake(),repo=adminRepository(port,A);
+ await repo.saveNote({swimmerId:CHILD,body:"Synthetic internal observation"});
+ assert.equal(calls.at(-1)?.name,"academy_save_note");assert.equal(calls.at(-1)?.filters.p_session,null);
+ assert.equal(calls.at(-1)?.filters.p_visible,undefined);
+ await repo.publishNote(CHILD,3);assert.equal(calls.at(-1)?.name,"academy_publish_note");assert.equal(calls.at(-1)?.filters.p_expected,3);
+ await repo.deleteNote(CHILD,4);assert.equal(calls.at(-1)?.name,"academy_delete_note");
+});

@@ -1,6 +1,6 @@
 import { academyAccess, controlled, type AcademyPort, type Filters } from "./access";
 import type {
-  AcademyRole, Contact, ContactLink, DashboardCounts, DocumentReceipt, GroupRow, ImportBatch, ImportException, Month,
+  CoachRow, CoachAssignment, SwimmerAssignment, AttendanceRevision, SwimmerNote, AcademyRole, Contact, ContactLink, DashboardCounts, DocumentReceipt, GroupRow, ImportBatch, ImportException, Month,
   ParentChildDetails, Plan, PrivateDetails, PublishedDocument, PublishedMonth, PublishedSubscription, SessionRow,
   Subscription, SwimmerRow, VerifiedChild, VerifiedGuardian,
 } from "./contracts";
@@ -125,6 +125,32 @@ export function adminRepository(port: AcademyPort, academyId: unknown) {
       return write("approve_import_review",{p_batch:uuid(v.batchId),p_expected:version(v.version),p_preview_digest:digest(v.previewDigest),
         p_selection_digest:digest(v.selectionDigest),p_includes_months:flag(v.includesMonths,"includesMonths")});
     },
+    listInvitations: () => rpc<{id:string;recipient:string;role:string;status:string;expires_at:string}[]>("list_invitations",{}),
+    revokeInvitation: (id:unknown) => rpc<null>("revoke_invitation",{p_invitation:uuid(id)}),
+    listCoaches: (page?: Page) => rows<CoachRow>("coaches","id,display_name,membership_id,archived_at,row_version",{},page,["display_name","id"]),
+    saveCoach(value: unknown) {
+      const v=object(value);
+      return write("save_coach",{...edit(v),p_name:text(v.name,"name",160),p_archive:flag(v.archived??false,"archived")});
+    },
+    listCoachAssignments: (page?: Page) => rows<CoachAssignment>("group_coaches","id,group_id,coach_id,valid_from,valid_until,is_primary,cancelled_at,row_version",{},page),
+    listSwimmerAssignments: (page?: Page) => rows<SwimmerAssignment>("group_swimmers","id,group_id,swimmer_id,valid_from,valid_until,cancelled_at,row_version",{},page),
+    assignCoach(value: unknown) {
+      const v=object(value), range=term(date(v.from),v.until);
+      return write("assign_coach",{p_group:uuid(v.groupId),p_coach:uuid(v.coachId),p_from:range.p_starts,p_until:range.p_ends,p_primary:flag(v.primary??false,"primary")});
+    },
+    endAssignment(value: unknown) {
+      const v=object(value);
+      return rpc<null>("end_assignment",{p_kind:choice(v.kind,"kind",["coach","swimmer"]),p_id:uuid(v.id),p_until:date(v.until),p_expected:version(v.version)});
+    },
+    attendanceHistory: (swimmerId: unknown, page?: Page) => rows<AttendanceRevision>("attendance_history","id,session_id,swimmer_id,revision,previous_status,new_status,reason,created_at",{swimmer_id:uuid(swimmerId)},page,["created_at","id"]),
+    sessionHistory: (sessionId: unknown, page?: Page) => rows<AttendanceRevision>("attendance_history","id,session_id,swimmer_id,revision,previous_status,new_status,reason,created_at",{session_id:uuid(sessionId)},page,["created_at","id"]),
+    listNotes: (swimmerId: unknown, page?: Page) => rows<SwimmerNote>("swimmer_notes","id,swimmer_id,session_id,body,visibility,deleted_at,row_version",{swimmer_id:uuid(swimmerId),deleted_at:null},page),
+    saveNote(value: unknown) {
+      const v=object(value);
+      return write("save_note",{...edit(v),p_swimmer:uuid(v.swimmerId),p_session:nullable(v.sessionId,uuid),p_body:text(v.body,"body",4000)});
+    },
+    publishNote: (id: unknown, expected: unknown) => rpc<null>("publish_note",{p_note:uuid(id),p_expected:version(expected)}),
+    deleteNote: (id: unknown, expected: unknown) => rpc<null>("delete_note",{p_note:uuid(id),p_expected:version(expected)}),
     listGroups: (page?: Page) => rows<GroupRow>("groups","id,name,level,capacity,schedule_label,archived_at,row_version",{},page),
     saveGroup(value: unknown) {
       const v = object(value);
@@ -135,6 +161,7 @@ export function adminRepository(port: AcademyPort, academyId: unknown) {
       const { p_starts, p_ends } = term(date(from),until);
       return write("transfer_swimmer",{p_swimmer:uuid(id),p_group:uuid(group),p_from:p_starts,p_until:p_ends});
     },
+    sessionById: (id: unknown) => rows<SessionRow>("sessions","id,group_id,session_date,status,starts_at,ends_at,row_version",{id:uuid(id)},{limit:1}),
     listSessions: (id: unknown, page?: Page) => rows<SessionRow>("sessions",
       "id,group_id,session_date,status,starts_at,ends_at,row_version",{group_id:uuid(id)},page,["session_date","id"]),
     createSession: (id: unknown, day: unknown) => write("create_session",{p_group:uuid(id),p_day:date(day)}),

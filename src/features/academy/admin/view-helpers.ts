@@ -1,0 +1,10 @@
+import type { openAdmin } from "./access";
+export type Repo = Awaited<ReturnType<typeof openAdmin>>;
+export type Query = Record<string,string|string[]|undefined>;
+export const queryValue=(q:Query,key:string)=>typeof q[key]==="string" ? q[key] : "";
+export const queryId=(q:Query,key:string)=>/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(queryValue(q,key))?queryValue(q,key).toLowerCase():"";
+export const queryMonth=(q:Query)=>/^(?:[1-9]|1[0-2])$/.test(queryValue(q,"month"))?Number(queryValue(q,"month")):6;
+export const queryYear=(q:Query)=>/^[1-9][0-9]{3}$/.test(queryValue(q,"year"))?Number(queryValue(q,"year")):2026;
+export const cell="px-4 py-3";
+export const formClass="grid gap-3";
+export const buttons="font-semibold text-cyan-800 underline-offset-4 hover:underline";

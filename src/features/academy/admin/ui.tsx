@@ -2,13 +2,14 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { academyConfig } from "../../../config/academy";
 import { Card } from "../../../components/ui";
+import { SaveButton } from "./save-button";
 import { signOut } from "./actions";
 
 export const links = [
   ["dashboard","Overview"],["swimmers","Swimmers"],["subscriptions","Subscriptions"],
-  ["groups","Groups"],["attendance","Attendance"],["registrations","Import review"],
+  ["coaches","Coaches"],["groups","Groups"],["attendance","Attendance"],["registrations","Import review"],
 ] as const;
-export const months = ["June","July","August","September","October","November"];
+export const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 export const levelOptions = [["beginner","Beginner"],["developing","Developing"],["advanced","Advanced"]] as const;
 export const paymentOptions = [["paid","Paid"],["pending","Pending"],["unpaid","Unpaid"],["unknown","Unknown (dash)"],["blank","Blank (NULL)"]] as const;
 export const documentOptions = [["unknown","Unknown"],["received","Received"],["missing","Missing"],["rejected","Rejected"]] as const;
@@ -53,10 +54,10 @@ export function Hidden({name,value}:{name:string;value?:string|number|null}) {
 export function Check({label,name,checked=false}:{label:string;name:string;checked?:boolean}) {
   return <label className="flex items-center gap-2 text-sm"><input type="checkbox" name={name} defaultChecked={checked}/>{label}</label>;
 }
-export function Save({children="Save"}:{children?:ReactNode}) {return <button className="button justify-self-start">{children}</button>;}
-export function MonthFilter({month,swimmer}:{month:number;swimmer?:string}) {
+export const Save = SaveButton;
+export function MonthFilter({month,year=2026,swimmer}:{month:number;year?:number;swimmer?:string}) {
   return <form className="mb-5 flex flex-wrap items-end gap-3">
-    <Hidden name="swimmer" value={swimmer}/><Select label="Billing period" name="month" value={String(month)} options={months.map((m,i)=>[String(i+6),m+" 2026"])}/><button className="secondary-button">Show period</button>
+    <Hidden name="swimmer" value={swimmer}/><Select label="Billing period" name="month" value={String(month)} options={months.map((m,i)=>[String(i+1),m])}/><Input label="Billing year" name="year" value={year} type="number" required/><button className="secondary-button">Show period</button>
   </form>;
 }
 
