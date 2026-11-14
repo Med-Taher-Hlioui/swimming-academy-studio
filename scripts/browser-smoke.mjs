@@ -7,9 +7,13 @@ import path from "node:path";
 import { spawn } from "node:child_process";
 const origin = "http://127.0.0.1:3100";
 const artifactRoot = path.resolve(".browser-test");
-const browserPath = [
+const browserPath = process.env.BROWSER_PATH || [
   "C:/Program Files/Google/Chrome/Application/chrome.exe",
   "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+  "/usr/bin/google-chrome",
+  "/usr/bin/chromium",
+  "/usr/bin/chromium-browser",
+  "/snap/bin/chromium",
 ].find(candidate => fs.existsSync(candidate));
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -19,10 +23,21 @@ async function main() {
   fs.mkdirSync(artifactRoot, { recursive: true });
   const profile = fs.mkdtempSync(path.join(artifactRoot, "profile-"));
   const browser = spawn(browserPath, [
-    "--headless=new", "--disable-gpu", "--no-first-run", "--no-default-browser-check",
+    "--headless=new", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu",
+    "--no-first-run", "--no-default-browser-check",
     "--disable-background-networking", "--remote-debugging-address=127.0.0.1",
     "--remote-debugging-port=0", "--user-data-dir=" + profile, "about:blank",
-  ], { windowsHide: true, stdio: "ignore" });
+  ], { windowsHide: true, stdio: ["ignore", "ignore", "pipe"] });
+
+  const browserStderr = [];
+  browser.stderr?.on("data", chunk => browserStderr.push(chunk.toString()));
+
+  // If Chromium exits before writing DevToolsActivePort, surface its stderr.
+  browser.on("exit", code => {
+    if (code !== 0 && browserStderr.length) {
+      console.error("Chromium exited with code " + code + ". stderr:\n" + browserStderr.join(""));
+    }
+  });
   let socket;
   try {
     const activePort = path.join(profile, "DevToolsActivePort");
